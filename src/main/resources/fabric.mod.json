@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "funny_mod",
+	"version": "${version}",
+	"name": "Funny Mod",
+	"description": "Funny Mod Is A Very Simple But Funny Mod By Wmy!",
+	"authors": [
+		"Wmy!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "MIT",
+	"icon": "assets/funny_mod/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.funny.funny_mod.FunnyMod"
+		],
+		"fabric-datagen": [
+			"net.funny.funny_mod.FunnyModDataGenerator"
+		]
+	},
+	"mixins": [
+		"funny_mod.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

@@ -1,0 +1,36 @@
+pluginManagement {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://plugins.gradle.org/m2' }
+        // Loom 插件本身也在 fabric maven 上
+        maven { url = 'https://maven.fabricmc.net/' }
+        gradlePluginPortal()
+    }
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.namespace == 'fabric-loom') {
+                useModule('net.fabricmc:loom:1.17.9')
+            }
+        }
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        // 阿里云镜像（加速通用依赖）
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/central' }
+
+        // 【关键】必须添加 Fabric 官方 Maven 仓库，否则找不到 Fabric API
+        maven {
+            name = "FabricMC"
+            url = "https://maven.fabricmc.net/"
+        }
+
+        // 可选：Mojang 官方库（有些映射表或原生库需要）
+        maven {
+            name = "Mojang"
+            url = "https://libraries.minecraft.net/"
+        }
+    }
+}
