@@ -1,4 +1,5 @@
 {
-  "item.funny_mod:joker": "Joker",
-  "item.funny_mod:antidote": "Antidote"
+  "item.funny_mod.joker": "Joker",
+  "item.funny_mod.antidote": "Antidote Of Joker",
+  "block.funny_mod.improve": "Improve Block"
 }
