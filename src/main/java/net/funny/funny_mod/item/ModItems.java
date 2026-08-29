@@ -12,8 +12,9 @@ import static net.funny.funny_mod.FunnyMod.MOD_ID;
 
 public class ModItems {
 
-    public static final Item JOKER = registerItem("joker", new Item(new Item.Settings()));
-    public static final Item ANTIDOTE = registerItem("antidote", new Item(new Item. Settings()));
+    // 必须使用 new JokerItem(...) 而不是 new Item(...)
+    public static final Item JOKER = registerItem("joker", new JokerItem(new Item.Settings().maxCount(16)));
+    public static final Item ANTIDOTE = registerItem("antidote", new AntidoteItem(new Item. Settings()));
 
 
     private static Item registerItem(String name, Item item){
