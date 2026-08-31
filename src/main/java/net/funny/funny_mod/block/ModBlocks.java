@@ -32,7 +32,7 @@ public class ModBlocks {
     public static void registerModBlocks() {
         FunnyMod.LOGGER.info("Registering Mod Blocks For " + MOD_ID);
         //4、添加到物品组
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.add(IMPROVE);
         });
     }

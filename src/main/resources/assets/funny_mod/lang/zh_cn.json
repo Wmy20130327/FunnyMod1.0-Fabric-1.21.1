@@ -1,5 +1,7 @@
 {
   "item.funny_mod.joker": "Joker牌手榴弹",
   "item.funny_mod.antidote": "Joker的解药",
-  "block.funny_mod.improve": "提升方块"
+  "block.funny_mod.improve": "提升方块",
+  "Funny Mod Items Group": "Funny Mod 物品组",
+  "Funny Mod Blocks Group": "Funny Mod 方块组"
 }

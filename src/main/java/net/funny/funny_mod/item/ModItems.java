@@ -25,7 +25,7 @@ public class ModItems {
     public static void registerModItems() {
         FunnyMod.LOGGER.info("Registering Mod Items For" + MOD_ID);
 
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
             entries.add(JOKER);
             entries.add(ANTIDOTE);
         });
