@@ -8,6 +8,10 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 public class AntidoteItem extends Item {
@@ -20,33 +24,54 @@ public class AntidoteItem extends Item {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
 
+        // 检查是否有漂浮效果
         if (player.hasStatusEffect(StatusEffects.LEVITATION)) {
 
             if (world.isClient()) {
-                // 播放铁砧敲击声（解药生效的声音）
+                // 客户端播放声音
                 world.playSound(player, player.getX(), player.getY(), player.getZ(),
-                        SoundEvents.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 2.0F, 2.5F); // 音调调高一点，更清脆
+                        SoundEvents.BLOCK_ANVIL_USE, SoundCategory.PLAYERS, 2.0F, 2.5F);
                 return TypedActionResult.success(stack, true);
             }
 
-            // 1. 解除漂浮
-            player.removeStatusEffect(StatusEffects.LEVITATION);
+            // --- 服务端逻辑开始 ---
 
-            // 2. 【核心修复】将摔落距离设为极大的负数！
-            // Minecraft 最大建筑高度是 320，最低是 -64，总高度差不到 400。
-            // 设为 -1000.0F，确保玩家无论掉多高，落地时 fallDistance 依然是负数，不会触发摔伤。
-            player.fallDistance = -1000.0F;
+            // 1. 定义射线检测的起点（玩家脚底）和终点（向下300格，防止掉入虚空太久）
+            Vec3d startPos = player.getPos();
+            Vec3d endPos = startPos.add(0, -300, 0);
 
-            // 3. 强制扣除 0.5 点伤害 (1/4 滴血)
-            player.damage(player.getDamageSources().fall(), 0.5F);
+            // 2. 创建射线检测上下文
+            // ShapeType.COLLIDER: 检测碰撞箱（实体和方块）
+            // FluidHandling.NONE: 忽略液体（如果你想穿透水，保持NONE；如果想停在水面，改用SOME）
+            RaycastContext context = new RaycastContext(
+                    startPos,
+                    endPos,
+                    RaycastContext.ShapeType.COLLIDER,
+                    RaycastContext.FluidHandling.NONE,
+                    player
+            );
 
-            // 4. 消耗物品
+            // 3. 执行检测
+            BlockHitResult hitResult = world.raycast(context);
+
+            // 4. 如果检测到了方块（没有 MISS）
+            if (hitResult.getType() != net.minecraft.util.hit.HitResult.Type.MISS) {
+                BlockPos hitPos = hitResult.getBlockPos();
+
+                // 5. 传送到方块上方 (Y + 1.0 确保站在方块表面，而不是卡在方块里)
+                // 使用 setPos 而不是 updatePosition，setPos 会同步给客户端
+                player.setPos(hitPos.getX() + 0.5, hitPos.getY() + 1.0, hitPos.getZ() + 0.5);
+
+                // 注意：这里不需要重置 fallDistance，因为玩家还在飘，并没有真正"落地"结算伤害
+            }
+
+            // 6. 消耗物品
             if (!player.isCreative()) {
                 stack.decrement(1);
             }
+
             return TypedActionResult.success(stack, false);
-        }
-        else {
+        } else {
             return TypedActionResult.fail(stack);
         }
     }
