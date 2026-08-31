@@ -17,7 +17,7 @@ import static net.funny.funny_mod.FunnyMod.MOD_ID;
 public class ModBlocks {
 
     //物品创建
-    public static Block IMPROVE = registerBlock("improve.json", new Block(AbstractBlock.Settings.create().strength(10f, 1200f).requiresTool().sounds(BlockSoundGroup.WET_GRASS)));
+    public static Block IMPROVE = registerBlock("improve", new Block(AbstractBlock.Settings.create().strength(10f, 1200f).requiresTool().sounds(BlockSoundGroup.WET_GRASS)));
 
     //1、创建 "注册BlockItem的" 方法
     private static void registerBlockItem(String name, Block block) {
